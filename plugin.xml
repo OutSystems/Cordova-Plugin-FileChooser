@@ -32,5 +32,17 @@
         <source-file src="src/android/localstorage/LocalStorageProvider.java" target-dir="src/com/ianhanniballake/localstorage" />
                         
     </platform>
+
+    <platform name="ios">
+         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+             <string>We access your camera to take pictures</string>
+         </config-file>
+         <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
+             <string>We access your photo library to load or save pictures</string>
+         </config-file>
+         <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+             <string></string>
+         </config-file>
+    </platform>
     
 </plugin>
