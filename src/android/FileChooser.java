@@ -33,7 +33,9 @@ public class FileChooser extends CordovaPlugin {
 
     private static final String TAG = "FileChooser";
     private static final String ACTION_OPEN = "open";
-    private static final int FILECHOOSER_REQUESTCODE = 2001;
+    private static final String ACTION_SELECT = "select";
+    private static final int OPENFILE_REQUESTCODE = 2001;
+    private static final int SELECTFILE_REQUESTCODE = 2002;
 
     private static final String MIME_TYPE_AUDIO = "audio/*";
     private static final String MIME_TYPE_IMAGE = "image/*";
@@ -52,11 +54,23 @@ public class FileChooser extends CordovaPlugin {
             this.cordova.getThreadPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    chooseFile(args, callbackContext);
+                    chooseFile(args, callbackContext, OPENFILE_REQUESTCODE);
                 }
             });
 
             return true;
+        }
+        else{
+            if (action.equals(ACTION_SELECT)) {
+                this.cordova.getThreadPool().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        chooseFile(args, callbackContext, SELECTFILE_REQUESTCODE);
+                    }
+                });
+
+                return true;
+            }
         }
 
         return false;
@@ -68,7 +82,7 @@ public class FileChooser extends CordovaPlugin {
      * @param args
      * @param callbackContext
      */
-    public void chooseFile( CordovaArgs args, CallbackContext callbackContext) {
+    public void chooseFile( CordovaArgs args, CallbackContext callbackContext, int requestCode) {
         /* Specifies the types of files accepted by the server */      
         String acceptType = null;
         /* Specifies the media capture directly from the device */
@@ -92,7 +106,7 @@ public class FileChooser extends CordovaPlugin {
         }
 
         /* Launch an intent for a single type of file, otherwise returns false */
-        boolean singleIntent = launchSingleIntent(acceptType, capture);
+        boolean singleIntent = launchSingleIntent(acceptType, capture, requestCode);
 
         if(!singleIntent){
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -113,7 +127,7 @@ public class FileChooser extends CordovaPlugin {
 
             Intent chooserIntent = Intent.createChooser(intent, "Choose an action");
             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, parcelables);
-            cordova.startActivityForResult(this, chooserIntent, FILECHOOSER_REQUESTCODE);
+            cordova.startActivityForResult(this, chooserIntent, requestCode);
         }
 
         PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -129,7 +143,7 @@ public class FileChooser extends CordovaPlugin {
      * @param capture
      * @returns true if a single intent was launched     
      */
-    private boolean launchSingleIntent(String acceptType, boolean capture){
+    private boolean launchSingleIntent(String acceptType, boolean capture, int requestCode){
 
         boolean single = false;
 
@@ -150,7 +164,7 @@ public class FileChooser extends CordovaPlugin {
             }
 
             if(capture){
-                cordova.startActivityForResult(this, intent, FILECHOOSER_REQUESTCODE);
+                cordova.startActivityForResult(this, intent, requestCode);
             }
             else{
                 /* Launch a chooser intent if capture is not defined */
@@ -162,7 +176,7 @@ public class FileChooser extends CordovaPlugin {
                 Intent chooserIntent = Intent.createChooser(fileIntent, "Choose an action");
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Parcelable[]{intent});
 
-                cordova.startActivityForResult(this, chooserIntent, FILECHOOSER_REQUESTCODE);
+                cordova.startActivityForResult(this, chooserIntent, requestCode);
 
             }
 
@@ -265,11 +279,23 @@ public class FileChooser extends CordovaPlugin {
         return intent;
     }
 
+    private JSONObject getResponseObject(String filename,String content){
+        JSONObject result = new JSONObject();
+        try {
+            result.put("FileName", filename);
+            result.put("FileContent",content);
+        } catch (JSONException e) {
+            Log.e("FileChooser","Unable to upload file: "+e.getMessage());
+        }
+
+        return result;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == FILECHOOSER_REQUESTCODE && callback != null) {
+        if ((requestCode == OPENFILE_REQUESTCODE || requestCode == SELECTFILE_REQUESTCODE)&& callback != null) {
 
             if (resultCode == Activity.RESULT_OK) {
                 if(data != null){
@@ -277,7 +303,15 @@ public class FileChooser extends CordovaPlugin {
 
                     if (uri != null) {
                         String base64 = getFileContent(uri);
-                        callback.success(base64);
+
+                        if(requestCode == OPENFILE_REQUESTCODE){
+                            callback.success(base64);
+                        }
+                        else{
+                            String fileName = FileUtils.getFile(this.cordova.getActivity().getApplicationContext(),uri).getName();
+                            JSONObject responseObject = getResponseObject(fileName,base64);
+                            callback.success(responseObject);
+                        }
                     } else {
                         callback.error("File uri was null");
                     }
@@ -285,7 +319,16 @@ public class FileChooser extends CordovaPlugin {
                 else{
                     if(fileUri != null){
                         String base64 = getFileContent(fileUri);
-                        callback.success(base64);
+
+                        if(requestCode == OPENFILE_REQUESTCODE){
+                            callback.success(base64);
+                        }
+                        else{
+                            String fileName = fileUri.getLastPathSegment();
+                            JSONObject responseObject = getResponseObject(fileName,base64);
+                            callback.success(responseObject);
+                        }
+
                         fileUri = null;
                     } else {
                         callback.error("File uri was null");
@@ -340,5 +383,3 @@ public class FileChooser extends CordovaPlugin {
 
 
 }
-
-

@@ -14,6 +14,14 @@
         }, 'FileChooser', 'open', [params||{}]);
     };
 
+    FileChooser.prototype.select = function(params, success, fail) {
+        return cordova.exec(function(args) {
+            success(args);
+        }, function(args) {
+            fail(args);
+        }, 'FileChooser', 'select', [params||{}]);
+    };
+
     window.filechooser = new FileChooser();
     
     // backwards compatibility
