@@ -37,7 +37,7 @@
          <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
              <string>We access your camera to take pictures</string>
          </config-file>
-            <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+         <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
              <string>We access your microphone to capture sound</string>
          </config-file>
          <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
