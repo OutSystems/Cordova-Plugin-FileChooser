@@ -1,0 +1,25 @@
+{
+    "name": "com.outsystems.plugins.filechooser",
+    "version": "1.0.0",
+    "description": "FileChooser for Cordova applications running on Android 4.4 (KitKat)",
+    "cordova": {
+      "id": "com.outsystems.plugins.filechooser",
+      "platforms": [
+        "android",
+        "ios"
+      ]
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/OutSystems/Cordova-Plugin-FileChooser"
+    },
+    "keywords": [
+      "cordova",
+      "outsystems",
+      "android",
+      "filechooser"
+    ],
+    "author": "OutSystems Inc",
+    "license": "MIT",
+    "homepage": "https://github.com/OutSystems/Cordova-Plugin-FileChooser#readme"
+  }
