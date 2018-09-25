@@ -44,7 +44,7 @@
              <string>We access your photo library to load or save pictures</string>
          </config-file>
          <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
-             <string></string>
+             <string>We access your location when you take pictures</string>
          </config-file>
     </platform>
     
