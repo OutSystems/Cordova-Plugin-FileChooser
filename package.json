@@ -1,6 +1,6 @@
 {
     "name": "com.outsystems.plugins.filechooser",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "FileChooser for Cordova applications running on Android 4.4 (KitKat)",
     "cordova": {
       "id": "com.outsystems.plugins.filechooser",
