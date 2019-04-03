@@ -6,11 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2]
 ### Additions
 - Adds NSLocationAlwaysUsageDescription preference to plugin.xml [RNMT-2763](https://outsystemsrd.atlassian.net/browse/RNMT-2763)
 
 ## [1.0.1]
 - Adds Add NSLocationWhenInUseUsageDescription preference to plugin.xml
 
-[Unreleased]: https://github.com/OutSystems/Cordova-Plugin-FileChooser/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/OutSystems/Cordova-Plugin-FileChooser/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/OutSystems/Cordova-Plugin-FileChooser/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/OutSystems/Cordova-Plugin-FileChooser/compare/1.0.0...1.0.1
