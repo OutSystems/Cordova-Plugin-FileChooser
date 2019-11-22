@@ -46,9 +46,6 @@
          <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
              <string>We access your location to improve your experience</string>
          </config-file>
-        <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
-            <string>We access your location to improve your experience</string>
-        </config-file>
     </platform>
     
 </plugin>
